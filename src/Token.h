@@ -19,19 +19,29 @@ public:
 
 	enum class TokenType
 	{
+		None,
 		OperatorPlus
 	};
 
 
 	Token(TokenType type, const std::string& string);
 	Token(TokenType type, std::string&& string);
-	~Token();
+	~Token() = default;
 
-	const std::string& string() const;
-	TokenType type() const;
+	Token(const Token& other);
+	Token(Token&& other);
+	Token& operator =(Token other);
+	Token& operator =(Token&& other);
+
+	const std::string& string() const {return m_string;}
+	TokenType type() const {return m_type;}
+
+	friend void swap(Token& token1, Token& token2);
 
 protected:
-	TokenType m_type;
+	Token() = default;
+
+	TokenType m_type = TokenType::None;
 	std::string m_string;
 };
 
