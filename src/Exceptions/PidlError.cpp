@@ -1,10 +1,3 @@
-/*
- * PidlError.cpp
- *
- *  Created on: Jan 24, 2014
- *      Author: tyler
- */
-
 #include "PidlError.h"
 
 namespace pidl
