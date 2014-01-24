@@ -2,6 +2,10 @@ set(GENERATOR_SOURCES
 	${CMAKE_CURRENT_SOURCE_DIR}/main.cpp
 	${CMAKE_CURRENT_SOURCE_DIR}/Token.h
 	${CMAKE_CURRENT_SOURCE_DIR}/Token.cpp
+	${CMAKE_CURRENT_SOURCE_DIR}/Tokenizer.h
+	${CMAKE_CURRENT_SOURCE_DIR}/Tokenizer.cpp
 	${CMAKE_CURRENT_SOURCE_DIR}/Exceptions/PidlError.h
 	${CMAKE_CURRENT_SOURCE_DIR}/Exceptions/PidlError.cpp
+	${CMAKE_CURRENT_SOURCE_DIR}/Exceptions/TokenizerError.h
+	${CMAKE_CURRENT_SOURCE_DIR}/Exceptions/TokenizerError.cpp
 	PARENT_SCOPE)

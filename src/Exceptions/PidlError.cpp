@@ -3,7 +3,7 @@
 namespace pidl
 {
 
-PidlError::PidlError(std::string message):
+PidlError::PidlError(const std::string& message):
 	m_message(message)
 {
 }

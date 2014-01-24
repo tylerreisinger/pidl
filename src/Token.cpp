@@ -1,14 +1,12 @@
-/*
- * Token.cpp
- *
- *  Created on: Jan 24, 2014
- *      Author: tyler
- */
-
 #include "Token.h"
 
 namespace pidl
 {
+
+Token::Token(TokenType type):
+	m_type(type)
+{
+}
 
 Token::Token(TokenType type, const std::string& string):
 	m_type(type), m_string(string)
@@ -31,9 +29,10 @@ Token::Token(Token&& other): Token()
 	swap(*this, other);
 }
 
-Token& Token::operator =(Token other)
+Token& Token::operator =(const Token& other)
 {
-	swap(*this, other);
+	m_type = other.m_type;
+	m_string = other.m_string;
 	return *this;
 }
 

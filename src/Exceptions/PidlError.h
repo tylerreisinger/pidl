@@ -11,7 +11,7 @@ class PidlError: public std::exception
 {
 public:
 	PidlError() = default;
-	PidlError(std::string message);
+	PidlError(const std::string& message);
 	virtual ~PidlError() noexcept = default;
 
 	PidlError(const PidlError& other);
