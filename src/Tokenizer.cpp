@@ -23,22 +23,53 @@ Tokenizer::~Tokenizer()
 
 Token Tokenizer::nextToken()
 {
+	checkEndOfStream();
+
 	if(endOfInput())
 	{
-		return Token(Token::TokenType::EndOfInput);
+		return Token(Token::TokenType::None);
 	}
+
+	skipWhitespace();
 
 	if(isDigit(currentCharacter()))
 	{
 		return readNumber();
 	}
+	if(currentCharacter() == '"')
+	{
+		return readString();
+	}
 
 	return Token();
 }
 
-bool Tokenizer::isDigit(char character)
+bool Tokenizer::isDigit(char character) const
 {
-	std::isdigit(character);
+	return character >= '0' && character <= '9';
+}
+
+void Tokenizer::skipWhitespace()
+{
+	while(currentCharacter() <= 32 && currentCharacter() != 0)
+	{
+		//Go to the next line
+		if(currentCharacter() == '\n')
+		{
+			m_line += 1;
+			m_col = 1;
+		}
+		advanceInput();
+	}
+}
+
+bool Tokenizer::checkEndOfStream()
+{
+	if(currentCharacter() == '\0')
+	{
+		m_endOfInput = true;
+	}
+	return m_endOfInput;
 }
 
 Token Tokenizer::readNumber()
@@ -52,8 +83,7 @@ Token Tokenizer::readNumber()
 	}
 	while(isDigit(currentCharacter()))
 	{
-		m_currentToken.append(1, currentCharacter());
-		advanceInput();
+		storeCharacterAndGetNext();
 	}
 	Token token;
 	if(isHex)
@@ -69,6 +99,57 @@ Token Tokenizer::readNumber()
 	{
 		token = Token(Token::TokenType::Number, std::move(m_currentToken));
 	}
+	m_currentToken.clear();
+	return token;
+}
+
+void Tokenizer::checkInvalidEndOfStream(const std::string& errorMessage)
+{
+	if(checkEndOfStream())
+	{
+		throw TokenizerError(errorMessage, m_file, m_line, m_col);
+	}
+}
+
+Token Tokenizer::readString()
+{
+	advanceInput();
+	while(currentCharacter() != '"')
+	{
+		checkInvalidEndOfStream("Unexpected end of stream found while looking for terminating '\"'");
+		//Handle escape sequences
+		if(currentCharacter() == '\\')
+		{
+			advanceInput();
+			switch(currentCharacter())
+			{
+			//Treat it as a normal character
+			case '\\':
+			{
+				break;
+			}
+			case 'n':
+			{
+				m_currentToken.append(1, '\n');
+				advanceInput();
+				break;
+			}
+			case 't':
+			{
+				m_currentToken.append(1, '\t');
+				advanceInput();
+				break;
+			}
+			default:
+			{
+				throw TokenizerError("Invalid escape sequence", m_file, m_line, m_col);
+			}
+			}
+		}
+		storeCharacterAndGetNext();
+	}
+	advanceInput();
+	Token token(Token::TokenType::String, std::move(m_currentToken));
 	m_currentToken.clear();
 	return token;
 }

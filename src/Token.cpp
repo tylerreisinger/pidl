@@ -50,5 +50,47 @@ void swap(Token& token1, Token& token2)
 	swap(token2.m_string, token2.m_string);
 }
 
+std::ostream& operator <<(std::ostream& os, Token::TokenType tokenType)
+{
+	switch(tokenType)
+	{
+	case Token::TokenType::None:
+	{
+		os << "None";
+		break;
+	}
+	case Token::TokenType::Number:
+	{
+		os << "Number";
+		break;
+	}
+	case Token::TokenType::HexNumber:
+	{
+		os << "Hex Number";
+		break;
+	}
+	case Token::TokenType::String:
+	{
+		os << "String";
+		break;
+	}
+	default:
+	{
+		os << "Unknown";
+		break;
+	}
+	}
+	return os;
+}
+
+std::ostream& operator <<(std::ostream& os, const Token& token)
+{
+	os << token.type();
+	if(!token.m_string.empty())
+	{
+		os << ": " << token.m_string;
+	}
+	return os;
+}
 
 }

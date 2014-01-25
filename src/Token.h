@@ -3,6 +3,8 @@
 
 #include <string>
 
+#include <ostream>
+
 namespace pidl
 {
 
@@ -17,7 +19,8 @@ public:
 		Number,
 		HexNumber,
 
-		EndOfInput,
+		String,
+
 		OperatorPlus
 	};
 
@@ -38,6 +41,10 @@ public:
 	//Category functions
 
 	bool isNumber() const {return m_type == TokenType::Number || m_type == TokenType::HexNumber;}
+	bool isString() const {return m_type == TokenType::String;}
+
+	friend std::ostream& operator <<(std::ostream& os, TokenType tokenType);
+	friend std::ostream& operator <<(std::ostream& os, const Token& token);
 
 	friend void swap(Token& token1, Token& token2);
 
