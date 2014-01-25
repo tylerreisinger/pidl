@@ -4,6 +4,8 @@
 #include <string>
 #include <utility>
 
+#include <boost/optional.hpp>
+
 #include "Token.h"
 
 namespace pidl
@@ -28,12 +30,17 @@ protected:
 	///Advance the character stream one position and return the new current character.
 	char getNextCharacter() {m_col++; return *(++m_sourcePtr);}
 	///Advance the character stream one position.
-	void advanceInput() {m_col++; ++m_sourcePtr;}
+	void advanceInput();
+	///Advance the character stream @a n position.
+	void advanceInput(int n);
 	///Get the next character in the stream but do not advance.
 	///@details It is an error to use this function when at the end of the stream.
-	char peekNextCharacter() {return *(m_sourcePtr + 1);}
+	char peekNextCharacter() const {return *(m_sourcePtr + 1);}
 	///Return the current character in the character stream.
-	char currentCharacter() {return *m_sourcePtr;}
+	char currentCharacter() const {return *m_sourcePtr;}
+
+	int currentColumn() const {return m_col;}
+	int currentLine() const {return m_line;}
 
 	void storeCharacterAndGetNext()
 	{
@@ -45,20 +52,39 @@ protected:
 	bool checkEndOfStream();
 	///Check if the current character is after the end of the stream and throw and exception if it is.
 	///@throw TokenizerError The stream is at the end.
-	void checkInvalidEndOfStream(const std::string& errorMessage);
+	void checkInvalidEndOfStream(const char* errorMessage);
 
 	///Check if the given character is a digit character [0-9].
 	bool isDigit(char character) const;
 
+	///Check if the given character is a hex digit character [0-9A-Za-z].
+	bool isHexDigit(char character) const;
+
 	///Advance the stream forward until the next non-whitespace character.
 	///@details Also advances the line counter forward if a newline is encountered.
 	void skipWhitespace();
+
+	void handleEscapeString();
+
+	///Test if character belongs to [A-Za-z_]
+	bool isValidLeadingIdentifierCharacter(char character);
+	///Test if character belongs to [A-Za-z_0-9]
+	bool isValidIdentifierCharacter(char character);
+
+	bool isNewline(char character) const {return character == '\n';}
+
+	///Lookahead max @a count characters and see if they is equal to @a str.
+	///Handles end of stream gracefully.
+	bool lookaheadEq(const char* str, int count);
 
 	///Read a decimal or hexadecimal number from the stream, returning the Token.
 	///@details A number is defined as either a decimal number ([0-9]+) or a hexadecimal number(0x[0-9]+).
 	///Decimal numbers may have leading zeros as octal is not recognized.
 	///@throw TokenizerError A null hexadecimal string ('0x') was encountered.
 	Token readNumber();
+
+	Token readDecimalNumber();
+	Token readHexNumber();
 
 	/**
 	 * Read a string literal from the stream, returning the Token.
@@ -69,6 +95,15 @@ protected:
 	 * - The stream ended while searching for the terminating '"'.
 	 */
 	Token readString();
+
+	Token readLineComment();
+	Token readBlockComment();
+
+	//[A-Za-z_][A-Za-z_0-9]*
+	Token readIdentifier();
+	Token readKeyword();
+
+	boost::optional<Token> readSymbol();
 
 	std::string m_currentToken;
 
@@ -81,6 +116,26 @@ protected:
 
 	bool m_endOfInput = false;
 };
+
+inline void Tokenizer::advanceInput()
+{
+	//Go to the next line
+	if(currentCharacter() == '\n')
+	{
+		m_line += 1;
+		m_col = 0;
+	}
+	m_col += 1;
+	m_sourcePtr += 1;
+}
+
+inline void Tokenizer::advanceInput(int n)
+{
+	for(int i = 0; i < n; ++i)
+	{
+		advanceInput();
+	}
+}
 
 }
 

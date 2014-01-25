@@ -21,13 +21,23 @@ public:
 
 		String,
 
+		Comment,
+
+		Identifier,
+
+		OpenDelimiter,
+		CloseDelimiter,
+
 		OperatorPlus
 	};
 
 	Token() = default;
 	Token(TokenType type);
+	Token(TokenType type, int startCol, int endCol, int startLine, int endLine);
 	Token(TokenType type, const std::string& string);
 	Token(TokenType type, std::string&& string);
+	Token(TokenType type, const std::string& string, int startCol, int endCol, int startLine, int endLine);
+	Token(TokenType type, std::string&& string, int startCol, int endCol, int startLine, int endLine);
 	~Token() = default;
 
 	Token(const Token& other);
@@ -43,6 +53,11 @@ public:
 	bool isNumber() const {return m_type == TokenType::Number || m_type == TokenType::HexNumber;}
 	bool isString() const {return m_type == TokenType::String;}
 
+	int startLine() const {return m_startLine;}
+	int endLine() const {return m_endLine;}
+	int startColumn() const {return m_startCol;}
+	int endColumn() const {return m_endCol;}
+
 	friend std::ostream& operator <<(std::ostream& os, TokenType tokenType);
 	friend std::ostream& operator <<(std::ostream& os, const Token& token);
 
@@ -52,6 +67,11 @@ protected:
 
 	TokenType m_type = TokenType::None;
 	std::string m_string;
+
+	int m_startLine = 0;
+	int m_endLine = 0;
+	int m_startCol = 0;
+	int m_endCol = 0;
 };
 
 }

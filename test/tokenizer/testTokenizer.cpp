@@ -9,7 +9,7 @@ int main(int argc, char** argv)
 {
 	try
 	{
-		pidl::Tokenizer tokenizer("0x55 \"Hi");
+		pidl::Tokenizer tokenizer("0x55 \"Hi\" //A comment\n /*Blocky*/ myIdenty ()");
 		while(!tokenizer.endOfInput())
 		{
 			pidl::Token token = tokenizer.nextToken();
