@@ -9,8 +9,8 @@ int main(int argc, char** argv)
 {
 	try
 	{
-		pidl::Tokenizer tokenizer("0x55 \"Hi\" //A comment\n /*Blocky*/ myIdenty ()");
-		while(!tokenizer.endOfInput())
+		pidl::Tokenizer tokenizer("0x55 \"Hi\" //A comment\n /*Blocky*/ myIdenty constant ()");
+		while(!tokenizer.isEndOfInput())
 		{
 			pidl::Token token = tokenizer.nextToken();
 			std::cout << token << std::endl;

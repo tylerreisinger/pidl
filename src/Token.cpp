@@ -88,32 +88,32 @@ std::ostream& operator <<(std::ostream& os, Token::TokenType tokenType)
 	{
 	case Token::TokenType::None:
 	{
-		os << "None";
+		os << "none";
 		break;
 	}
 	case Token::TokenType::Number:
 	{
-		os << "Number";
+		os << "number";
 		break;
 	}
 	case Token::TokenType::HexNumber:
 	{
-		os << "Hex Number";
+		os << "hex number";
 		break;
 	}
 	case Token::TokenType::String:
 	{
-		os << "String";
+		os << "string";
 		break;
 	}
 	case Token::TokenType::Comment:
 	{
-		os << "Comment";
+		os << "comment";
 		break;
 	}
 	case Token::TokenType::Identifier:
 	{
-		os << "Identifier";
+		os << "identifier";
 		break;
 	}
 	case Token::TokenType::OpenDelimiter:
@@ -126,9 +126,69 @@ std::ostream& operator <<(std::ostream& os, Token::TokenType tokenType)
 		os << "Close Delimiter";
 		break;
 	}
+	case Token::TokenType::ScopeResolution:
+	{
+		os << "scope resolution operator";
+		break;
+	}
+	case Token::TokenType::KeywordConstant:
+	{
+		os << "keyword constant";
+		break;
+	}
+	case Token::TokenType::KeywordEnum:
+	{
+		os << "keyword enum";
+		break;
+	}
+	case Token::TokenType::KeywordNamespace:
+	{
+		os << "keyword namespace";
+		break;
+	}
+	case Token::TokenType::KeywordPacket:
+	{
+		os << "keyword packet";
+		break;
+	}
+	case Token::TokenType::KeywordRequired:
+	{
+		os << "keyword req";
+		break;
+	}
+	case Token::TokenType::KeywordOptional:
+	{
+		os << "keyword opt";
+		break;
+	}
+	case Token::TokenType::SymCloseBrace:
+	{
+		os << "}";
+		break;
+	}
+	case Token::TokenType::SymComma:
+	{
+		os << ",";
+		break;
+	}
+	case Token::TokenType::SymEquals:
+	{
+		os << "=";
+		break;
+	}
+	case Token::TokenType::SymOpenBrace:
+	{
+		os << "{";
+		break;
+	}
+	case Token::TokenType::SymColon:
+	{
+		os << ":";
+		break;
+	}
 	default:
 	{
-		os << "Unknown";
+		os << "unknown";
 		break;
 	}
 	}

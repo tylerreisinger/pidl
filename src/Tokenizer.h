@@ -4,8 +4,6 @@
 #include <string>
 #include <utility>
 
-#include <boost/optional.hpp>
-
 #include "Token.h"
 
 namespace pidl
@@ -23,7 +21,7 @@ public:
 	Token nextToken();
 
 	///Return if the end of the stream has been reached.
-	bool endOfInput() const {return m_endOfInput;}
+	bool isEndOfInput() const {return m_endOfInput;}
 
 protected:
 
@@ -101,9 +99,10 @@ protected:
 
 	//[A-Za-z_][A-Za-z_0-9]*
 	Token readIdentifier();
-	Token readKeyword();
+	bool makeKeyword(const std::string& name, int line, int startCol, Token& outToken);
 
-	boost::optional<Token> readSymbol();
+	bool readSymbol(Token& outToken);
+	Token makeSingleCharSymbol(Token::TokenType type);
 
 	std::string m_currentToken;
 

@@ -28,7 +28,7 @@ Token Tokenizer::nextToken()
 	skipWhitespace();
 	checkEndOfStream();
 
-	if(endOfInput())
+	if(isEndOfInput())
 	{
 		return Token(Token::TokenType::None);
 	}
@@ -59,10 +59,10 @@ Token Tokenizer::nextToken()
 		return readIdentifier();
 	}
 
-	auto sym = readSymbol();
-	if(sym.is_initialized())
+	Token symbolToken;
+	if(readSymbol(symbolToken))
 	{
-		return sym.get();
+		return symbolToken;
 	}
 
 	throw TokenizerError(std::string("Unexpected character '") + currentCharacter() +
@@ -257,48 +257,128 @@ Token Tokenizer::readIdentifier()
 	{
 		storeCharacterAndGetNext();
 	}
-	Token token(Token::TokenType::Identifier, std::move(m_currentToken),
-			startCol, currentColumn() - 1, currentLine(), currentLine());
+
+	Token token;
+	if(!makeKeyword(m_currentToken, currentLine(), startCol, token))
+	{
+		token = Token(Token::TokenType::Identifier, std::move(m_currentToken),
+				startCol, currentColumn() - 1, currentLine(), currentLine());
+	}
 	m_currentToken.clear();
 	return token;
 }
 
-Token Tokenizer::readKeyword()
+bool Tokenizer::makeKeyword(const std::string& name, int line, int startCol, Token& outToken)
 {
-}
-
-boost::optional<Token> Tokenizer::readSymbol()
-{
-	switch(currentCharacter())
+	Token::TokenType type = Token::TokenType::None;
+	//Compare character by character instead of doing a bunch of string comparisons
+	//as it should be considerably faster and scale upward without much extra overhead.
+	switch(name[0])
 	{
-	case '(':
-	case '[':
-	case '{':
-	case '<':
+	case 'c':
 	{
-		storeCharacterAndGetNext();
-		Token token(Token::TokenType::OpenDelimiter, std::move(m_currentToken),
-				currentColumn() - 1, currentColumn() - 1, currentLine(), currentLine());
-		m_currentToken.clear();
-		return token;
+		if(name == "constant")
+		{
+			type = Token::TokenType::KeywordConstant;
+		}
+		break;
 	}
-	case ')':
-	case ']':
-	case '}':
-	case '>':
+	case 'e':
 	{
-		storeCharacterAndGetNext();
-		Token token(Token::TokenType::CloseDelimiter, std::move(m_currentToken),
-				currentColumn() - 1, currentColumn() - 1, currentLine(), currentLine());
-		m_currentToken.clear();
-		return token;
+		if(name == "enum")
+		{
+			type = Token::TokenType::KeywordEnum;
+		}
+		break;
 	}
-	default:
+	case 'n':
 	{
-		return boost::optional<Token>();
+		if(name == "namespace")
+		{
+			type = Token::TokenType::KeywordNamespace;
+		}
+		break;
+	}
+	case 'o':
+	{
+		if(name == "opt")
+		{
+			type = Token::TokenType::KeywordOptional;
+		}
+		break;
+	}
+	case 'p':
+	{
+		if(name == "packet")
+		{
+			type = Token::TokenType::KeywordPacket;
+		}
+		break;
+	}
+	case 'r':
+	{
+		if(name == "req")
+		{
+			type = Token::TokenType::KeywordRequired;
+		}
 		break;
 	}
 	}
+	if(type != Token::TokenType::None)
+	{
+		outToken = Token(type, startCol, startCol + name.size(), line, line);
+		return true;
+	}
+	return false;
+}
+
+bool Tokenizer::readSymbol(Token& outToken)
+{
+	switch(currentCharacter())
+	{
+	case '{':
+	{
+		outToken = makeSingleCharSymbol(Token::TokenType::SymOpenBrace);
+		break;
+	}
+	case '}':
+	{
+		outToken = makeSingleCharSymbol(Token::TokenType::SymCloseBrace);
+		break;
+	}
+	case '.':
+	{
+		outToken = makeSingleCharSymbol(Token::TokenType::ScopeResolution);
+		break;
+	}
+	case ',':
+	{
+		outToken = makeSingleCharSymbol(Token::TokenType::SymComma);
+		break;
+	}
+	case ':':
+	{
+		outToken = makeSingleCharSymbol(Token::TokenType::SymColon);
+		break;
+	}
+	case '=':
+	{
+		outToken = makeSingleCharSymbol(Token::TokenType::SymEquals);
+		break;
+	}
+	default:
+	{
+		return false;
+	}
+	}
+	return true;
+}
+
+Token Tokenizer::makeSingleCharSymbol(Token::TokenType type)
+{
+	advanceInput();
+	return Token(type,
+		currentColumn() - 1, currentColumn() - 1, currentLine(), currentLine());
 }
 
 }

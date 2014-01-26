@@ -28,7 +28,22 @@ public:
 		OpenDelimiter,
 		CloseDelimiter,
 
-		OperatorPlus
+		//Symbols
+		ScopeResolution,
+		SymEquals,
+		SymComma,
+		SymOpenBrace,
+		SymCloseBrace,
+		SymColon,
+
+		//Keywords
+		KeywordConstant,
+		KeywordEnum,
+		KeywordNamespace,
+		KeywordPacket,
+
+		KeywordRequired,
+		KeywordOptional
 	};
 
 	Token() = default;

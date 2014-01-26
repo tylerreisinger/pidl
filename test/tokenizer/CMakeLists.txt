@@ -7,3 +7,4 @@ set_target_properties(tokenizer_test PROPERTIES
 set_target_properties(tokenizer_test PROPERTIES 
 	RUNTIME_OUTPUT_DIRECTORY_DEBUG "${TESTING_BIN_DIR}/debug"
 	RUNTIME_OUTPUT_DIRECTORY "${TESTING_BIN_DIR}/release")
+	

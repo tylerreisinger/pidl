@@ -24,7 +24,7 @@ TEST(TokenizerTest, HandlesSimpleString)
 	{
 		auto token = tk.nextToken();
 		ASSERT_EQ(pidl::Token::TokenType::None, token.type());
-		ASSERT_TRUE(tk.endOfInput());
+		ASSERT_TRUE(tk.isEndOfInput());
 	});
 }
 
