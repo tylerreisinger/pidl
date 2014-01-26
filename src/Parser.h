@@ -25,6 +25,8 @@ namespace ast
 	class IdentifierExpression;
 	class AttributeList;
 	class AttributeValue;
+	class TypeList;
+	class ParameterizedType;
 }
 class Parser
 {
@@ -59,6 +61,7 @@ protected:
 	std::unique_ptr<ast::AttributeValue> readAttributeValue();
 
 	std::unique_ptr<ast::Type> readType();
+	std::unique_ptr<ast::TypeList> readTypeList();
 
 	std::unique_ptr<ast::Expression> readExpression();
 	std::unique_ptr<ast::IntegerConstantExpression> readIntegerConstant();

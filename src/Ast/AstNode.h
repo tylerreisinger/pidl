@@ -26,6 +26,7 @@ public:
 		PacketFieldDefinition,
 		AttributeList,
 		AttributeValue,
+		TypeList,
 
 
 		//Expressions
@@ -34,7 +35,8 @@ public:
 		IdentifierExpression,
 
 		//Types
-		SimpleType
+		SimpleType,
+		ParameterizedType
 	};
 
 	AstNode(NodeType type);

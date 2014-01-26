@@ -356,6 +356,16 @@ bool Tokenizer::readSymbol(Token& outToken)
 		outToken = makeSingleCharSymbol(Token::TokenType::SymCloseSqBracket);
 		break;
 	}
+	case '<':
+	{
+		outToken = makeSingleCharSymbol(Token::TokenType::SymOpenAngBracket);
+		break;
+	}
+	case '>':
+	{
+		outToken = makeSingleCharSymbol(Token::TokenType::SymCloseAngBracket);
+		break;
+	}
 	case '.':
 	{
 		outToken = makeSingleCharSymbol(Token::TokenType::ScopeResolution);

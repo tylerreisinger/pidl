@@ -13,6 +13,8 @@ class Type: public pidl::ast::AstNode
 public:
 	Type(NodeType type);
 	virtual ~Type();
+
+	virtual std::string name() const = 0;
 };
 
 }

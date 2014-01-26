@@ -35,12 +35,16 @@ set(PARSER_SOURCES
 	${CMAKE_CURRENT_SOURCE_DIR}/Ast/Packet.cpp
 	${CMAKE_CURRENT_SOURCE_DIR}/Ast/PacketFieldDefinition.h
 	${CMAKE_CURRENT_SOURCE_DIR}/Ast/PacketFieldDefinition.cpp
+	${CMAKE_CURRENT_SOURCE_DIR}/Ast/ParameterizedType.h
+	${CMAKE_CURRENT_SOURCE_DIR}/Ast/ParameterizedType.cpp
 	${CMAKE_CURRENT_SOURCE_DIR}/Ast/SimpleType.h
 	${CMAKE_CURRENT_SOURCE_DIR}/Ast/SimpleType.cpp
 	${CMAKE_CURRENT_SOURCE_DIR}/Ast/Statement.h
 	${CMAKE_CURRENT_SOURCE_DIR}/Ast/Statement.cpp
 	${CMAKE_CURRENT_SOURCE_DIR}/Ast/Type.h
 	${CMAKE_CURRENT_SOURCE_DIR}/Ast/Type.cpp
+	${CMAKE_CURRENT_SOURCE_DIR}/Ast/TypeList.h
+	${CMAKE_CURRENT_SOURCE_DIR}/Ast/TypeList.cpp
 	${CMAKE_CURRENT_SOURCE_DIR}/Exceptions/ParserError.h
 	${CMAKE_CURRENT_SOURCE_DIR}/Exceptions/ParserError.cpp
 	${CMAKE_CURRENT_SOURCE_DIR}/Exceptions/PidlError.h

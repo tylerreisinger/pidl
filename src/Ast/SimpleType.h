@@ -14,7 +14,7 @@ public:
 	SimpleType(const std::string& name);
 	virtual ~SimpleType() = default;
 
-	const std::string& name() const {return m_name;}
+	virtual std::string name() const override {return m_name;}
 
 	virtual void output(std::ostream& stream) const;
 

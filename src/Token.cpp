@@ -191,6 +191,16 @@ std::ostream& operator <<(std::ostream& os, Token::TokenType tokenType)
 		os << "]";
 		break;
 	}
+	case Token::TokenType::SymOpenAngBracket:
+	{
+		os << "<";
+		break;
+	}
+	case Token::TokenType::SymCloseAngBracket:
+	{
+		os << ">";
+		break;
+	}
 	case Token::TokenType::SymColon:
 	{
 		os << ":";

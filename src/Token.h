@@ -36,6 +36,8 @@ public:
 		SymCloseBrace,
 		SymOpenSqBracket,
 		SymCloseSqBracket,
+		SymOpenAngBracket,
+		SymCloseAngBracket,
 		SymColon,
 
 		//Keywords

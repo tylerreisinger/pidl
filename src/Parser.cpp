@@ -11,6 +11,8 @@
 #include "Ast/SimpleType.h"
 #include "Ast/IdentifierExpression.h"
 #include "Ast/AttributeValue.h"
+#include "Ast/ParameterizedType.h"
+#include "Ast/TypeList.h"
 #include "Exceptions/ParserError.h"
 
 #include "make_unique.h"
@@ -280,9 +282,35 @@ std::unique_ptr<ast::AttributeValue> Parser::readAttributeValue()
 std::unique_ptr<ast::Type> Parser::readType()
 {
 	requireTokenType(Token::TokenType::Identifier, "Expected a type name but found a '{1}' instead");
-	std::string name = m_currentToken.string();
+	std::string typeName = m_currentToken.string();
 	getNextToken();
-	return make_unique<ast::SimpleType>(name);
+	if(m_currentToken.type() == Token::TokenType::SymOpenAngBracket)
+	{
+		auto typeList = readTypeList();
+		return make_unique<ast::ParameterizedType>(make_unique<ast::SimpleType>(typeName), std::move(typeList));
+	}
+	else
+	{
+		return make_unique<ast::SimpleType>(typeName);
+	}
+}
+
+std::unique_ptr<ast::TypeList> Parser::readTypeList()
+{
+	consumeToken(Token::TokenType::SymOpenAngBracket, "Expected a type list beginning with '<' but found a '{1} instead");
+	auto typeList = make_unique<ast::TypeList>();
+	while(true)
+	{
+		auto type = readType();
+		typeList->appendChild(std::move(type));
+		if(m_currentToken.type() != Token::TokenType::SymComma)
+		{
+			break;
+		}
+		getNextToken();
+	}
+	consumeToken(Token::TokenType::SymCloseAngBracket, "Expected a '>' ending the type list");
+	return typeList;
 }
 
 std::unique_ptr<ast::Expression> Parser::readExpression()

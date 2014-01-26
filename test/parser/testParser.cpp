@@ -27,9 +27,9 @@ packet PlayerJoinPacket
     req f32 x : 1,
     req f32 y : 2,
     [default = Color.Blue]
-    opt uint32 color : 3,
+    opt Color color : 3,
     opt int32 team : TEAM_INDEX,    
-
+    req array<int32> flags : 10,
     opt string name : 6,
 
     opt bytearray extra : 7
