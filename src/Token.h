@@ -18,6 +18,7 @@ public:
 
 		Number,
 		HexNumber,
+		FloatNumber,
 
 		String,
 
@@ -72,7 +73,8 @@ public:
 
 	//Category functions
 
-	bool isNumber() const {return m_type == TokenType::Number || m_type == TokenType::HexNumber;}
+	bool isNumber() const {return m_type == TokenType::Number || m_type == TokenType::HexNumber
+			|| m_type == TokenType::FloatNumber;}
 	bool isString() const {return m_type == TokenType::String;}
 
 	int startLine() const {return m_startLine;}

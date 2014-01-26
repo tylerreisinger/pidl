@@ -33,6 +33,7 @@ public:
 		IntegerConstant,
 		StringExpression,
 		BooleanExpression,
+		FloatExpression,
 		Constant,
 		IdentifierExpression,
 

@@ -101,6 +101,11 @@ std::ostream& operator <<(std::ostream& os, Token::TokenType tokenType)
 		os << "hex number";
 		break;
 	}
+	case Token::TokenType::FloatNumber:
+	{
+		os << "float";
+		break;
+	}
 	case Token::TokenType::String:
 	{
 		os << "string";

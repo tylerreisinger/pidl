@@ -35,7 +35,10 @@ packet PlayerJoinPacket
 
     opt bytearray extra : 7,
     [default = true]
-    opt bool isPrimary : 8
+    opt bool isPrimary : 8,
+
+    [default = 99.54]
+    opt f32 myNumber : 99
 }
 )";
 

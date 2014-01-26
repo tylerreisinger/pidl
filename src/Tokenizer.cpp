@@ -112,16 +112,30 @@ Token Tokenizer::readNumber()
 Token Tokenizer::readDecimalNumber()
 {
 	int startCol = currentColumn();
-	while(isDigit(currentCharacter()))
+	bool foundDot = false;
+	while(isDigit(currentCharacter()) || currentCharacter() == '.')
 	{
 		storeCharacterAndGetNext();
+		if(currentCharacter() == '.')
+		{
+			if(foundDot)
+			{
+				throw TokenizerError("Multiple radix points found in one number", m_file, m_line, m_col);
+			}
+			foundDot = true;
+		}
 	}
-	if(m_currentToken.empty())
+	Token token;
+	if(foundDot)
 	{
-		throw TokenizerError("Null hexadecimal literal encountered", m_file, m_line, m_col);
+		token = Token(Token::TokenType::FloatNumber, std::move(m_currentToken), startCol,
+					currentColumn() - 1, currentLine(), currentLine());
 	}
-	Token token(Token::TokenType::Number, std::move(m_currentToken), startCol,
-			currentColumn() - 1, currentLine(), currentLine());
+	else
+	{
+		token = Token(Token::TokenType::Number, std::move(m_currentToken), startCol,
+					currentColumn() - 1, currentLine(), currentLine());
+	}
 	m_currentToken.clear();
 	return token;
 }
@@ -132,6 +146,10 @@ Token Tokenizer::readHexNumber()
 	while(isHexDigit(currentCharacter()))
 	{
 		storeCharacterAndGetNext();
+	}
+	if(m_currentToken.empty())
+	{
+		throw TokenizerError("Null hexadecimal literal encountered", m_file, m_line, m_col);
 	}
 	Token token(Token::TokenType::HexNumber, std::move(m_currentToken), startCol - 2,
 			currentColumn() - 1, currentLine(), currentLine());

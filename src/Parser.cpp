@@ -15,6 +15,7 @@
 #include "Ast/TypeList.h"
 #include "Ast/StringExpression.h"
 #include "Ast/BooleanExpression.h"
+#include "Ast/FloatExpression.h"
 #include "Exceptions/ParserError.h"
 
 #include "make_unique.h"
@@ -324,6 +325,10 @@ std::unique_ptr<ast::Expression> Parser::readExpression()
 	{
 		return readIntegerConstant();
 	}
+	case Token::TokenType::FloatNumber:
+	{
+		return readFloatExpression();
+	}
 	case Token::TokenType::Identifier:
 	{
 		return readIdentifierExpression();
@@ -344,6 +349,20 @@ std::unique_ptr<ast::Expression> Parser::readExpression()
 	}
 	}
 	return nullptr;
+}
+
+std::unique_ptr<ast::FloatExpression> Parser::readFloatExpression()
+{
+	if(!m_currentToken.isNumber())
+	{
+		raiseError("Expected a number but found a '{0}' instead");
+	}
+	double value;
+	std::stringstream stream;
+	stream << m_currentToken.string();
+	stream >> value;
+	getNextToken();
+	return make_unique<ast::FloatExpression>(value);
 }
 
 std::unique_ptr<ast::StringExpression> Parser::readStringExpression()
