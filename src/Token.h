@@ -46,6 +46,9 @@ public:
 		KeywordNamespace,
 		KeywordPacket,
 
+		KeywordTrue,
+		KeywordFalse,
+
 		KeywordRequired,
 		KeywordOptional
 	};

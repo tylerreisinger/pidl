@@ -14,6 +14,7 @@
 #include "Ast/ParameterizedType.h"
 #include "Ast/TypeList.h"
 #include "Ast/StringExpression.h"
+#include "Ast/BooleanExpression.h"
 #include "Exceptions/ParserError.h"
 
 #include "make_unique.h"
@@ -331,6 +332,11 @@ std::unique_ptr<ast::Expression> Parser::readExpression()
 	{
 		return readStringExpression();
 	}
+	case Token::TokenType::KeywordTrue:
+	case Token::TokenType::KeywordFalse:
+	{
+		return readBooleanExpression();
+	}
 	default:
 	{
 		raiseError("Unexpected token '{0}' encountered when parsing expression");
@@ -346,6 +352,25 @@ std::unique_ptr<ast::StringExpression> Parser::readStringExpression()
 	auto expr =  make_unique<ast::StringExpression>(m_currentToken.string());
 	getNextToken();
 	return expr;
+}
+
+std::unique_ptr<ast::BooleanExpression> Parser::readBooleanExpression()
+{
+	if(m_currentToken.type() == Token::TokenType::KeywordTrue)
+	{
+		getNextToken();
+		return make_unique<ast::BooleanExpression>(true);
+	}
+	else if(m_currentToken.type() == Token::TokenType::KeywordFalse)
+	{
+		getNextToken();
+		return make_unique<ast::BooleanExpression>(false);
+	}
+	else
+	{
+		raiseError("Expected 'true' or 'false' but found '{0}'");
+		return nullptr;
+	}
 }
 
 std::unique_ptr<ast::IdentifierExpression> Parser::readIdentifierExpression()

@@ -32,6 +32,7 @@ public:
 		//Expressions
 		IntegerConstant,
 		StringExpression,
+		BooleanExpression,
 		Constant,
 		IdentifierExpression,
 

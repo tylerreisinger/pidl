@@ -291,6 +291,14 @@ bool Tokenizer::makeKeyword(const std::string& name, int line, int startCol, Tok
 		}
 		break;
 	}
+	case 'f':
+	{
+		if(name == "false")
+		{
+			type = Token::TokenType::KeywordFalse;
+		}
+		break;
+	}
 	case 'n':
 	{
 		if(name == "namespace")
@@ -320,6 +328,14 @@ bool Tokenizer::makeKeyword(const std::string& name, int line, int startCol, Tok
 		if(name == "req")
 		{
 			type = Token::TokenType::KeywordRequired;
+		}
+		break;
+	}
+	case 't':
+	{
+		if(name == "true")
+		{
+			type = Token::TokenType::KeywordTrue;
 		}
 		break;
 	}

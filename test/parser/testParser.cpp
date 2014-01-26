@@ -33,7 +33,9 @@ packet PlayerJoinPacket
     [default = "MyName"]
     opt string name : 6,
 
-    opt bytearray extra : 7
+    opt bytearray extra : 7,
+    [default = true]
+    opt bool isPrimary : 8
 }
 )";
 

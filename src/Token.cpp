@@ -151,6 +151,16 @@ std::ostream& operator <<(std::ostream& os, Token::TokenType tokenType)
 		os << "keyword packet";
 		break;
 	}
+	case Token::TokenType::KeywordTrue:
+	{
+		os << "keyword true";
+		break;
+	}
+	case Token::TokenType::KeywordFalse:
+	{
+		os << "keyword false";
+		break;
+	}
 	case Token::TokenType::KeywordRequired:
 	{
 		os << "keyword req";

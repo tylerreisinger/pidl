@@ -17,6 +17,8 @@ set(PARSER_SOURCES
 	${CMAKE_CURRENT_SOURCE_DIR}/Ast/AttributeValue.cpp
 	${CMAKE_CURRENT_SOURCE_DIR}/Ast/AstNode.h
 	${CMAKE_CURRENT_SOURCE_DIR}/Ast/AstNode.cpp
+	${CMAKE_CURRENT_SOURCE_DIR}/Ast/BooleanExpression.h
+	${CMAKE_CURRENT_SOURCE_DIR}/Ast/BooleanExpression.cpp
 	${CMAKE_CURRENT_SOURCE_DIR}/Ast/Constant.h
 	${CMAKE_CURRENT_SOURCE_DIR}/Ast/Constant.cpp
 	${CMAKE_CURRENT_SOURCE_DIR}/Ast/ConstantAssignment.h
