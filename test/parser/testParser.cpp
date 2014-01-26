@@ -30,6 +30,7 @@ packet PlayerJoinPacket
     opt Color color : 3,
     opt int32 team : TEAM_INDEX,    
     req array<int32> flags : 10,
+    [default = "MyName"]
     opt string name : 6,
 
     opt bytearray extra : 7

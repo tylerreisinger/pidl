@@ -41,6 +41,8 @@ set(PARSER_SOURCES
 	${CMAKE_CURRENT_SOURCE_DIR}/Ast/SimpleType.cpp
 	${CMAKE_CURRENT_SOURCE_DIR}/Ast/Statement.h
 	${CMAKE_CURRENT_SOURCE_DIR}/Ast/Statement.cpp
+	${CMAKE_CURRENT_SOURCE_DIR}/Ast/StringExpression.h
+	${CMAKE_CURRENT_SOURCE_DIR}/Ast/StringExpression.cpp
 	${CMAKE_CURRENT_SOURCE_DIR}/Ast/Type.h
 	${CMAKE_CURRENT_SOURCE_DIR}/Ast/Type.cpp
 	${CMAKE_CURRENT_SOURCE_DIR}/Ast/TypeList.h

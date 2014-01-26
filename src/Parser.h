@@ -27,6 +27,7 @@ namespace ast
 	class AttributeValue;
 	class TypeList;
 	class ParameterizedType;
+	class StringExpression;
 }
 class Parser
 {
@@ -65,6 +66,7 @@ protected:
 
 	std::unique_ptr<ast::Expression> readExpression();
 	std::unique_ptr<ast::IntegerConstantExpression> readIntegerConstant();
+	std::unique_ptr<ast::StringExpression> readStringExpression();
 	std::unique_ptr<ast::IdentifierExpression> readIdentifierExpression();
 
 

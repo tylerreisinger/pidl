@@ -13,6 +13,7 @@
 #include "Ast/AttributeValue.h"
 #include "Ast/ParameterizedType.h"
 #include "Ast/TypeList.h"
+#include "Ast/StringExpression.h"
 #include "Exceptions/ParserError.h"
 
 #include "make_unique.h"
@@ -326,6 +327,10 @@ std::unique_ptr<ast::Expression> Parser::readExpression()
 	{
 		return readIdentifierExpression();
 	}
+	case Token::TokenType::String:
+	{
+		return readStringExpression();
+	}
 	default:
 	{
 		raiseError("Unexpected token '{0}' encountered when parsing expression");
@@ -333,6 +338,14 @@ std::unique_ptr<ast::Expression> Parser::readExpression()
 	}
 	}
 	return nullptr;
+}
+
+std::unique_ptr<ast::StringExpression> Parser::readStringExpression()
+{
+	requireTokenType(Token::TokenType::String, "Expected a string literal but found a '{1}' instead");
+	auto expr =  make_unique<ast::StringExpression>(m_currentToken.string());
+	getNextToken();
+	return expr;
 }
 
 std::unique_ptr<ast::IdentifierExpression> Parser::readIdentifierExpression()
