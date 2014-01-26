@@ -9,6 +9,7 @@
 #include "Ast/AstNode.h"
 #include "Ast/Statement.h"
 #include "Ast/Expression.h"
+#include "Ast/AttributeList.h"
 
 namespace pidl
 {
@@ -22,6 +23,8 @@ namespace ast
 	class PacketFieldDefinition;
 	class Type;
 	class IdentifierExpression;
+	class AttributeList;
+	class AttributeValue;
 }
 class Parser
 {
@@ -52,6 +55,8 @@ protected:
 	std::unique_ptr<ast::Enum> readEnum();
 	std::unique_ptr<ast::Packet> readPacket();
 	std::unique_ptr<ast::PacketFieldDefinition> readPacketFieldDefinition();
+	std::unique_ptr<ast::AttributeList> readAttributeList();
+	std::unique_ptr<ast::AttributeValue> readAttributeValue();
 
 	std::unique_ptr<ast::Type> readType();
 
@@ -64,6 +69,8 @@ protected:
 
 	std::unique_ptr<Tokenizer> m_tokenizer;
 	Token m_currentToken;
+
+	std::unique_ptr<ast::AttributeList> m_prefixAttributeList = nullptr;
 
 	bool m_endOfStream = false;
 };

@@ -181,6 +181,16 @@ std::ostream& operator <<(std::ostream& os, Token::TokenType tokenType)
 		os << "{";
 		break;
 	}
+	case Token::TokenType::SymOpenSqBracket:
+	{
+		os << "[";
+		break;
+	}
+	case Token::TokenType::SymCloseSqBracket:
+	{
+		os << "]";
+		break;
+	}
 	case Token::TokenType::SymColon:
 	{
 		os << ":";

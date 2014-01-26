@@ -24,6 +24,9 @@ public:
 		Enum,
 		Packet,
 		PacketFieldDefinition,
+		AttributeList,
+		AttributeValue,
+
 
 		//Expressions
 		IntegerConstant,

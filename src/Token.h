@@ -34,6 +34,8 @@ public:
 		SymComma,
 		SymOpenBrace,
 		SymCloseBrace,
+		SymOpenSqBracket,
+		SymCloseSqBracket,
 		SymColon,
 
 		//Keywords

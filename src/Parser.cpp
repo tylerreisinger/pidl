@@ -10,6 +10,7 @@
 #include "Ast/PacketFieldDefinition.h"
 #include "Ast/SimpleType.h"
 #include "Ast/IdentifierExpression.h"
+#include "Ast/AttributeValue.h"
 #include "Exceptions/ParserError.h"
 
 #include "make_unique.h"
@@ -57,6 +58,21 @@ std::unique_ptr<ast::AstNode> Parser::readStatement()
 	{
 		getNextToken();
 		return readPacket();
+	}
+	//If a [ is found at the beginning of a statement, it is an attribute list.
+	//We can't associate it with something without significant look-ahead, so we
+	//will store it until something wants to claim it or the next statement is executed and it is unclaimed.
+	//The latter case is an error and will throw an exception.
+	case Token::TokenType::SymOpenSqBracket:
+	{
+		m_prefixAttributeList = readAttributeList();
+		Token startTk = m_currentToken;
+		auto ret = readStatement();
+		if(m_prefixAttributeList != nullptr)
+		{
+			throw ParserError("Extraneous attribute list encountered", m_file, startTk.startLine(), startTk.startColumn());
+		}
+		return ret;
 	}
 	default:
 	{
@@ -192,7 +208,8 @@ std::unique_ptr<ast::Packet> Parser::readPacket()
 	requireTokenType(Token::TokenType::Identifier, "Expected an identifier naming a packet but found a '{1}' instead");
 	std::string packetName = m_currentToken.string();
 	getNextToken();
-	auto packetObj = make_unique<ast::Packet>(packetName);
+	auto packetObj = make_unique<ast::Packet>(packetName, std::move(m_prefixAttributeList));
+	m_prefixAttributeList = nullptr;
 	consumeToken(Token::TokenType::SymOpenBrace, "packet declaration must be followed by '{'");
 	while(true)
 	{
@@ -210,6 +227,11 @@ std::unique_ptr<ast::Packet> Parser::readPacket()
 
 std::unique_ptr<ast::PacketFieldDefinition> Parser::readPacketFieldDefinition()
 {
+	std::unique_ptr<ast::AttributeList> attribList;
+	if(m_currentToken.type() == Token::TokenType::SymOpenSqBracket)
+	{
+		attribList = readAttributeList();
+	}
 	bool required = true;
 	if(m_currentToken.type() == Token::TokenType::KeywordOptional ||
 			m_currentToken.type() == Token::TokenType::KeywordRequired)
@@ -223,7 +245,36 @@ std::unique_ptr<ast::PacketFieldDefinition> Parser::readPacketFieldDefinition()
 	getNextToken();
 	consumeToken(Token::TokenType::SymColon, "Packet field requires an index specifier preceded by a colon");
 	auto locationExpression = readExpression();
-	return make_unique<ast::PacketFieldDefinition>(fieldName, std::move(type), std::move(locationExpression), required);
+	return make_unique<ast::PacketFieldDefinition>(fieldName, std::move(type), std::move(locationExpression), required,
+			std::move(attribList));
+}
+
+std::unique_ptr<ast::AttributeList> Parser::readAttributeList()
+{
+	consumeToken(Token::TokenType::SymOpenSqBracket, "Attribute list must begin with '['");
+	auto attributeList = make_unique<ast::AttributeList>();
+	while(true)
+	{
+		auto attributeValue = readAttributeValue();
+		attributeList->appendChild(std::move(attributeValue));
+		if(m_currentToken.type() != Token::TokenType::SymComma)
+		{
+			break;
+		}
+		getNextToken();
+	}
+	consumeToken(Token::TokenType::SymCloseSqBracket, "Attribute list must end with ']'");
+	return std::move(attributeList);
+}
+
+std::unique_ptr<ast::AttributeValue> Parser::readAttributeValue()
+{
+	requireTokenType(Token::TokenType::Identifier, "Expected identifier naming an attribute but found a '{1}' instead");
+	std::string name = m_currentToken.string();
+	getNextToken();
+	consumeToken(Token::TokenType::SymEquals, "Attribute name must be immediately followed by an assignment");
+	auto expression = readExpression();
+	return make_unique<ast::AttributeValue>(name, std::move(expression));
 }
 
 std::unique_ptr<ast::Type> Parser::readType()

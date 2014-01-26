@@ -11,19 +11,23 @@ namespace pidl
 {
 namespace ast
 {
+class AttributeList;
 
 class Packet : public Statement
 {
 public:
-	Packet(const std::string& name);
+	Packet(const std::string& name, std::unique_ptr<AttributeList> attributeList);
 	virtual ~Packet() = default;
 
 	virtual void output(std::ostream& stream) const override;
 
 	void appendChild(std::unique_ptr<PacketFieldDefinition> child);
 
+	AttributeList* attributeList() const {return m_attributeList;}
+
 protected:
 	std::string m_name;
+	AttributeList* m_attributeList = nullptr;
 };
 
 }

@@ -21,11 +21,13 @@ enum Color
     Green = 3
 }
 
+[id = 1, channel = 1]
 packet PlayerJoinPacket
 {
     req f32 x : 1,
     req f32 y : 2,
-    opt uint32 color : 0x3,
+    [default = Color.Blue]
+    opt uint32 color : 3,
     opt int32 team : TEAM_INDEX,    
 
     opt string name : 6,
