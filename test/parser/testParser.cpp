@@ -26,7 +26,8 @@ packet PlayerJoinPacket
     req f32 x : 1,
     req f32 y : 2,
     opt uint32 color : 0x3,
-    
+    opt int32 team : TEAM_INDEX,    
+
     opt string name : 6,
 
     opt bytearray extra : 7

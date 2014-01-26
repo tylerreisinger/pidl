@@ -21,6 +21,7 @@ namespace ast
 	class Packet;
 	class PacketFieldDefinition;
 	class Type;
+	class IdentifierExpression;
 }
 class Parser
 {
@@ -54,7 +55,9 @@ protected:
 
 	std::unique_ptr<ast::Type> readType();
 
+	std::unique_ptr<ast::Expression> readExpression();
 	std::unique_ptr<ast::IntegerConstantExpression> readIntegerConstant();
+	std::unique_ptr<ast::IdentifierExpression> readIdentifierExpression();
 
 
 	std::string m_file;

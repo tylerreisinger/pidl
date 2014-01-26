@@ -9,6 +9,7 @@
 #include "Ast/Packet.h"
 #include "Ast/PacketFieldDefinition.h"
 #include "Ast/SimpleType.h"
+#include "Ast/IdentifierExpression.h"
 #include "Exceptions/ParserError.h"
 
 #include "make_unique.h"
@@ -221,7 +222,7 @@ std::unique_ptr<ast::PacketFieldDefinition> Parser::readPacketFieldDefinition()
 	std::string fieldName = m_currentToken.string();
 	getNextToken();
 	consumeToken(Token::TokenType::SymColon, "Packet field requires an index specifier preceded by a colon");
-	auto locationExpression = readIntegerConstant();
+	auto locationExpression = readExpression();
 	return make_unique<ast::PacketFieldDefinition>(fieldName, std::move(type), std::move(locationExpression), required);
 }
 
@@ -231,6 +232,45 @@ std::unique_ptr<ast::Type> Parser::readType()
 	std::string name = m_currentToken.string();
 	getNextToken();
 	return make_unique<ast::SimpleType>(name);
+}
+
+std::unique_ptr<ast::Expression> Parser::readExpression()
+{
+	switch(m_currentToken.type())
+	{
+	case Token::TokenType::Number:
+	case Token::TokenType::HexNumber:
+	{
+		return readIntegerConstant();
+	}
+	case Token::TokenType::Identifier:
+	{
+		return readIdentifierExpression();
+	}
+	default:
+	{
+		raiseError("Unexpected token '{0}' encountered when parsing expression");
+		break;
+	}
+	}
+	return nullptr;
+}
+
+std::unique_ptr<ast::IdentifierExpression> Parser::readIdentifierExpression()
+{
+	std::vector<std::string> namePath;
+	while(true)
+	{
+		requireTokenType(Token::TokenType::Identifier, "Expected a qualified name but found a '{1}' instead");
+		namePath.push_back(m_currentToken.string());
+		getNextToken();
+		if(m_currentToken.type() != Token::TokenType::ScopeResolution)
+		{
+			break;
+		}
+		getNextToken();
+	}
+	return make_unique<ast::IdentifierExpression>(std::move(namePath));
 }
 
 

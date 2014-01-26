@@ -28,6 +28,7 @@ public:
 		//Expressions
 		IntegerConstant,
 		Constant,
+		IdentifierExpression,
 
 		//Types
 		SimpleType

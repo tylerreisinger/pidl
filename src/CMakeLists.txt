@@ -19,6 +19,8 @@ set(PARSER_SOURCES
 	${CMAKE_CURRENT_SOURCE_DIR}/Ast/Enum.cpp
 	${CMAKE_CURRENT_SOURCE_DIR}/Ast/Expression.h
 	${CMAKE_CURRENT_SOURCE_DIR}/Ast/Expression.cpp
+	${CMAKE_CURRENT_SOURCE_DIR}/Ast/IdentifierExpression.h
+	${CMAKE_CURRENT_SOURCE_DIR}/Ast/IdentifierExpression.cpp
 	${CMAKE_CURRENT_SOURCE_DIR}/Ast/IntegerConstantExpression.h
 	${CMAKE_CURRENT_SOURCE_DIR}/Ast/IntegerConstantExpression.cpp
 	${CMAKE_CURRENT_SOURCE_DIR}/Ast/NamespaceStatement.h
