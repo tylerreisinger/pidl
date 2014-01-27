@@ -61,14 +61,8 @@ packet PlayerJoinPacket
 	try
 	{
 		pidl::Parser parser(std::unique_ptr<pidl::Tokenizer>(new pidl::Tokenizer(input)));
-		while(!parser.isEndOfStream())
-		{
-			auto node = parser.readNext();
-			if(node)
-			{
-				node->outputTree(std::cout);
-			}
-		}
+		auto module = parser.readModule();
+		module->outputTree(std::cout);
 	}
 	catch(pidl::ParserError& ex)
 	{

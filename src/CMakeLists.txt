@@ -39,6 +39,8 @@ set(PARSER_SOURCES
 	${CMAKE_CURRENT_SOURCE_DIR}/Ast/IdentifierExpression.cpp
 	${CMAKE_CURRENT_SOURCE_DIR}/Ast/IntegerConstantExpression.h
 	${CMAKE_CURRENT_SOURCE_DIR}/Ast/IntegerConstantExpression.cpp
+	${CMAKE_CURRENT_SOURCE_DIR}/Ast/Module.h
+	${CMAKE_CURRENT_SOURCE_DIR}/Ast/Module.cpp
 	${CMAKE_CURRENT_SOURCE_DIR}/Ast/Multiplication.h
 	${CMAKE_CURRENT_SOURCE_DIR}/Ast/Multiplication.cpp
 	${CMAKE_CURRENT_SOURCE_DIR}/Ast/NamespaceStatement.h

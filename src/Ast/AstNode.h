@@ -13,10 +13,14 @@ namespace ast
 class AstNode
 {
 public:
+	typedef std::vector<std::unique_ptr<AstNode>>::iterator iterator;
+	typedef std::vector<std::unique_ptr<AstNode>>::const_iterator const_iterator;
 
 	enum class NodeType
 	{
 		None,
+
+		Module,
 
 		//Statements
 		Namespace,
@@ -62,6 +66,14 @@ public:
 
 	size_t childCount() const {return m_children.size();}
 	bool hasChildren() const {return !m_children.empty();}
+
+	iterator childrenBegin() {return m_children.begin();}
+	const_iterator childrenBegin() const {return m_children.begin();}
+	iterator childrenEnd() {return m_children.end();}
+	const_iterator childrenEnd() const {return m_children.end();}
+
+	AstNode* firstChild() {return m_children.front().get();}
+	AstNode* lastChild() {return m_children.back().get();}
 
 	virtual void output(std::ostream& stream) const = 0;
 	void outputTree(std::ostream& stream) const;

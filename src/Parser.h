@@ -11,6 +11,7 @@
 #include "Ast/Statement.h"
 #include "Ast/Expression.h"
 #include "Ast/AttributeList.h"
+#include "Ast/Module.h"
 
 namespace pidl
 {
@@ -41,6 +42,7 @@ public:
 	~Parser() = default;
 
 	std::unique_ptr<ast::AstNode> readNext();
+	std::unique_ptr<ast::Module> readModule();
 
 	bool isEndOfStream() const {return m_endOfStream;}
 

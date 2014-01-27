@@ -41,6 +41,20 @@ std::unique_ptr<ast::AstNode> Parser::readNext()
 	return readStatement();
 }
 
+std::unique_ptr<ast::Module> Parser::readModule()
+{
+	auto module = make_unique<ast::Module>();
+	while(!isEndOfStream())
+	{
+		auto node = readNext();
+		if(node != nullptr)
+		{
+			module->appendChild(std::move(node));
+		}
+	}
+	return module;
+}
+
 std::unique_ptr<ast::AstNode> Parser::readStatement()
 {
 	if(checkEndOfStream())
