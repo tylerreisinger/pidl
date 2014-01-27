@@ -420,6 +420,26 @@ bool Tokenizer::readSymbol(Token& outToken)
 		outToken = makeSingleCharSymbol(Token::TokenType::SymEquals);
 		break;
 	}
+	case '+':
+	{
+		outToken = makeSingleCharSymbol(Token::TokenType::SymAdd);
+		break;
+	}
+	case '-':
+	{
+		outToken = makeSingleCharSymbol(Token::TokenType::SymSub);
+		break;
+	}
+	case '*':
+	{
+		outToken = makeSingleCharSymbol(Token::TokenType::SymMul);
+		break;
+	}
+	case '/':
+	{
+		outToken = makeSingleCharSymbol(Token::TokenType::SymDiv);
+		break;
+	}
 	default:
 	{
 		return false;

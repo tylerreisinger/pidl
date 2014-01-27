@@ -221,6 +221,26 @@ std::ostream& operator <<(std::ostream& os, Token::TokenType tokenType)
 		os << ":";
 		break;
 	}
+	case Token::TokenType::SymAdd:
+	{
+		os << "+";
+		break;
+	}
+	case Token::TokenType::SymSub:
+	{
+		os << "-";
+		break;
+	}
+	case Token::TokenType::SymMul:
+	{
+		os << "*";
+		break;
+	}
+	case Token::TokenType::SymDiv:
+	{
+		os << "/";
+		break;
+	}
 	default:
 	{
 		os << "unknown";

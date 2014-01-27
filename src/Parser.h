@@ -2,6 +2,7 @@
 #define PARSER_H_
 
 #include <memory>
+#include <deque>
 
 #include "Token.h"
 #include "Tokenizer.h"
@@ -30,6 +31,8 @@ namespace ast
 	class StringExpression;
 	class BooleanExpression;
 	class FloatExpression;
+	class BinaryExpression;
+	class Negation;
 }
 class Parser
 {
@@ -53,6 +56,9 @@ protected:
 
 	bool checkEndOfStream();
 
+	bool isOperator(Token::TokenType type);
+	int getOperatorPrecedence(Token::TokenType type);
+
 	std::unique_ptr<ast::AstNode> readStatement();
 
 	std::unique_ptr<ast::NamespaceStatement> readNamespace();
@@ -67,6 +73,9 @@ protected:
 	std::unique_ptr<ast::TypeList> readTypeList();
 
 	std::unique_ptr<ast::Expression> readExpression();
+	std::unique_ptr<ast::Expression> readExpressionTerm();
+	std::unique_ptr<ast::BinaryExpression> makeBinaryExpression(Token::TokenType op,
+			std::unique_ptr<ast::Expression> left, std::unique_ptr<ast::Expression> right);
 	std::unique_ptr<ast::IntegerConstantExpression> readIntegerConstant();
 	std::unique_ptr<ast::FloatExpression> readFloatExpression();
 	std::unique_ptr<ast::StringExpression> readStringExpression();

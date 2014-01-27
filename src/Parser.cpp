@@ -16,6 +16,11 @@
 #include "Ast/StringExpression.h"
 #include "Ast/BooleanExpression.h"
 #include "Ast/FloatExpression.h"
+#include "Ast/Addition.h"
+#include "Ast/Multiplication.h"
+#include "Ast/Subtraction.h"
+#include "Ast/Division.h"
+#include "Ast/Negation.h"
 #include "Exceptions/ParserError.h"
 
 #include "make_unique.h"
@@ -137,6 +142,41 @@ void Parser::raiseError(const std::string& string)
 	std::string errorString = string;
 	replaceTypeString(m_currentToken.type(), 0, errorString);
 	throw ParserError(errorString, m_file, m_currentToken.startLine(), m_currentToken.startColumn());
+}
+
+bool Parser::isOperator(Token::TokenType type)
+{
+	return type == Token::TokenType::SymAdd || type == Token::TokenType::SymMul
+			|| type == Token::TokenType::SymSub || type == Token::TokenType::SymDiv;
+}
+
+int Parser::getOperatorPrecedence(Token::TokenType type)
+{
+	switch(type)
+	{
+	case Token::TokenType::SymAdd:
+	{
+		return ast::Addition::precedence;
+	}
+	case Token::TokenType::SymSub:
+	{
+		return ast::Subtraction::precedence;
+	}
+	case Token::TokenType::SymMul:
+	{
+		return ast::Multiplication::precedence;
+	}
+	case Token::TokenType::SymDiv:
+	{
+		return ast::Division::precedence;
+	}
+	default:
+	{
+		raiseError("Unknown operator encountered.");
+		break;
+	}
+	}
+	return 0;
 }
 
 std::unique_ptr<ast::ConstantAssignment> Parser::readConstantAssignment()
@@ -318,6 +358,99 @@ std::unique_ptr<ast::TypeList> Parser::readTypeList()
 
 std::unique_ptr<ast::Expression> Parser::readExpression()
 {
+	std::deque<std::unique_ptr<ast::Expression>> termStack;
+	std::deque<Token::TokenType> operatorStack;
+	bool lastTokenWasOperator = true;
+
+	while(true)
+	{
+		if(isOperator(m_currentToken.type()))
+		{
+			operatorStack.push_back(m_currentToken.type());
+			getNextToken();
+			lastTokenWasOperator = true;
+		}
+		else
+		{
+
+			try
+			{
+				termStack.push_back(readExpressionTerm());
+			}
+			catch(ParserError& error)
+			{
+				if(termStack.size() == 2)
+				{
+					auto left = std::move(termStack.front());
+					auto right = std::move(termStack.back());
+					return makeBinaryExpression(operatorStack.back(), std::move(left), std::move(right));
+				}
+				else if(termStack.size() == 1)
+				{
+					return std::move(termStack.front());
+				}
+				else
+				{
+					raiseError("Malformed expression");
+					break;
+				}
+			}
+
+			if(!lastTokenWasOperator)
+			{
+				raiseError("Encountered two terms in a row without a separating operator.");
+			}
+
+			while(operatorStack.size() >= termStack.size())
+			{
+				if(operatorStack.back() == Token::TokenType::SymSub)
+				{
+					auto operand = std::move(termStack.back());
+					termStack.pop_back();
+					operatorStack.pop_back();
+					termStack.push_back(make_unique<ast::Negation>(std::move(operand)));
+				}
+				else
+				{
+					raiseError("Unknown unary operator");
+				}
+			}
+			if(termStack.size() == 3)
+			{
+				if(getOperatorPrecedence(operatorStack.back()) >= getOperatorPrecedence(operatorStack.front()))
+				{
+					auto left = std::move(termStack.front());
+					termStack.pop_front();
+					auto right = std::move(termStack.front());
+					termStack.pop_front();
+					auto op = operatorStack.front();
+					operatorStack.pop_front();
+					termStack.push_front(
+							makeBinaryExpression(op,std::move(left), std::move(right)));
+				}
+				else
+				{
+					auto right = std::move(termStack.back());
+					termStack.pop_back();
+					auto left = std::move(termStack.back());
+					termStack.pop_back();
+					auto op = operatorStack.back();
+					operatorStack.pop_back();
+					termStack.push_back(
+							makeBinaryExpression(op,std::move(left), std::move(right)));
+
+				}
+			}
+			lastTokenWasOperator = false;
+		}
+	}
+
+
+	return std::move(termStack.front());
+}
+
+std::unique_ptr<ast::Expression> Parser::readExpressionTerm()
+{
 	switch(m_currentToken.type())
 	{
 	case Token::TokenType::Number:
@@ -345,6 +478,36 @@ std::unique_ptr<ast::Expression> Parser::readExpression()
 	default:
 	{
 		raiseError("Unexpected token '{0}' encountered when parsing expression");
+		break;
+	}
+	}
+	return nullptr;
+}
+
+std::unique_ptr<ast::BinaryExpression> Parser::makeBinaryExpression(Token::TokenType op,
+		std::unique_ptr<ast::Expression> left, std::unique_ptr<ast::Expression> right)
+{
+	switch(op)
+	{
+	case Token::TokenType::SymAdd:
+	{
+		return make_unique<ast::Addition>(std::move(left), std::move(right));
+	}
+	case Token::TokenType::SymSub:
+	{
+		return make_unique<ast::Subtraction>(std::move(left), std::move(right));
+	}
+	case Token::TokenType::SymMul:
+	{
+		return make_unique<ast::Multiplication>(std::move(left), std::move(right));
+	}
+	case Token::TokenType::SymDiv:
+	{
+		return make_unique<ast::Division>(std::move(left), std::move(right));
+	}
+	default:
+	{
+		raiseError("Unknown operator encountered.");
 		break;
 	}
 	}

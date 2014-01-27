@@ -38,7 +38,9 @@ packet PlayerJoinPacket
     opt bool isPrimary : 8,
 
     [default = 99.54]
-    opt f32 myNumber : 99
+    opt f32 myNumber : 99,
+
+    opt f32 exprTest : TEAM_INDEX + 3 * --5 * 7 / 2 + 2 - 3
 }
 )";
 

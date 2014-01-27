@@ -37,6 +37,13 @@ public:
 		Constant,
 		IdentifierExpression,
 
+		Addition,
+		Subtraction,
+		Multiplication,
+		Division,
+
+		Negation,
+
 		//Types
 		SimpleType,
 		ParameterizedType

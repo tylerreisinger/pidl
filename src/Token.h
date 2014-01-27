@@ -41,6 +41,11 @@ public:
 		SymCloseAngBracket,
 		SymColon,
 
+		SymAdd,
+		SymSub,
+		SymMul,
+		SymDiv,
+
 		//Keywords
 		KeywordConstant,
 		KeywordEnum,
