@@ -39,6 +39,8 @@ public:
 		SymCloseSqBracket,
 		SymOpenAngBracket,
 		SymCloseAngBracket,
+		SymOpenParen,
+		SymCloseParen,
 		SymColon,
 
 		SymAdd,

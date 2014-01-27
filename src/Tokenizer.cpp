@@ -400,6 +400,16 @@ bool Tokenizer::readSymbol(Token& outToken)
 		outToken = makeSingleCharSymbol(Token::TokenType::SymCloseAngBracket);
 		break;
 	}
+	case '(':
+	{
+		outToken = makeSingleCharSymbol(Token::TokenType::SymOpenParen);
+		break;
+	}
+	case ')':
+	{
+		outToken = makeSingleCharSymbol(Token::TokenType::SymCloseParen);
+		break;
+	}
 	case '.':
 	{
 		outToken = makeSingleCharSymbol(Token::TokenType::ScopeResolution);

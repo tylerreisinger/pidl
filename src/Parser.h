@@ -74,6 +74,7 @@ protected:
 
 	std::unique_ptr<ast::Expression> readExpression();
 	std::unique_ptr<ast::Expression> readExpressionTerm();
+	std::unique_ptr<ast::Expression> readExpressionTermGroup();
 	std::unique_ptr<ast::BinaryExpression> makeBinaryExpression(Token::TokenType op,
 			std::unique_ptr<ast::Expression> left, std::unique_ptr<ast::Expression> right);
 	std::unique_ptr<ast::IntegerConstantExpression> readIntegerConstant();

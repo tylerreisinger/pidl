@@ -216,6 +216,16 @@ std::ostream& operator <<(std::ostream& os, Token::TokenType tokenType)
 		os << ">";
 		break;
 	}
+	case Token::TokenType::SymOpenParen:
+	{
+		os << "(";
+		break;
+	}
+	case Token::TokenType::SymCloseParen:
+	{
+		os << ")";
+		break;
+	}
 	case Token::TokenType::SymColon:
 	{
 		os << ":";

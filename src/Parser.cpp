@@ -475,6 +475,11 @@ std::unique_ptr<ast::Expression> Parser::readExpressionTerm()
 	{
 		return readBooleanExpression();
 	}
+	case Token::TokenType::SymOpenParen:
+	{
+		getNextToken();
+		return readExpressionTermGroup();
+	}
 	default:
 	{
 		raiseError("Unexpected token '{0}' encountered when parsing expression");
@@ -482,6 +487,13 @@ std::unique_ptr<ast::Expression> Parser::readExpressionTerm()
 	}
 	}
 	return nullptr;
+}
+
+std::unique_ptr<ast::Expression> Parser::readExpressionTermGroup()
+{
+	auto expr = readExpression();
+	consumeToken(Token::TokenType::SymCloseParen, "Expected a closing parenthesis but found a '{1}' instead");
+	return std::move(expr);
 }
 
 std::unique_ptr<ast::BinaryExpression> Parser::makeBinaryExpression(Token::TokenType op,

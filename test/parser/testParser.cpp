@@ -40,7 +40,7 @@ packet PlayerJoinPacket
     [default = 99.54]
     opt f32 myNumber : 99,
 
-    opt f32 exprTest : TEAM_INDEX + 3 * --5 * 7 / 2 + 2 - 3
+    opt f32 exprTest : TEAM_INDEX + 3 * --5 * (7 + (3 + 2)) / 2 + 2 - 3
 }
 )";
 
